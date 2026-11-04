@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asad Khilji | AI Automation & n8n Specialist</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0b0f19',
+                        cardBg: 'rgba(15, 23, 42, 0.75)',
+                        accentCyan: '#06b6d4',
+                        accentPurple: '#8b5cf6',
+                        accentBlue: '#3b82f6',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Outfit', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom scrollbar and glassmorphism styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0f19;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-nav {
+            background: rgba(11, 15, 25, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glow-effect {
+            box-shadow: 0 0 40px -10px rgba(6, 182, 212, 0.15);
+        }
+        .glow-purple {
+            box-shadow: 0 0 50px -10px rgba(139, 92, 246, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-darkBg text-slate-100 font-sans antialiased selection:bg-cyan-500 selection:text-white overflow-x-hidden">
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-32 opacity-0 transition-all duration-300 ease-in-out glass-card border border-cyan-500/30 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center space-x-3">
+        <div id="toast-icon" class="text-cyan-400 text-xl"><i class="fa-solid fa-circle-check"></i></div>
+        <div>
+            <h4 id="toast-title" class="font-bold text-sm font-heading">Success!</h4>
+            <p id="toast-desc" class="text-xs text-slate-300">Message sent successfully.</p>
+        </div>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="fixed top-0 left-0 right-0 z-40 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="#" class="flex items-center space-x-3 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-purple-600 flex items-center justify-center shadow-lg shadow-cyan-500/20 group-hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-network-wired text-white text-lg"></i>
+                </div>
+                <span class="font-heading font-extrabold text-xl tracking-tight text-white">Asad<span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">Khilji</span></span>
+            </a>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-300">
+                <a href="#services" class="hover:text-cyan-400 transition-colors">Services</a>
+                <a href="#work" class="hover:text-cyan-400 transition-colors">Case Studies</a>
+                <a href="#stack" class="hover:text-cyan-400 transition-colors">Tech Stack</a>
+                <a href="#results" class="hover:text-cyan-400 transition-colors">Results</a>
+                <a href="#contact" class="hover:text-cyan-400 transition-colors">Contact</a>
+            </nav>
+
+            <!-- CTA Button -->
+            <div class="hidden md:flex items-center space-x-4">
+                <a href="#contact" class="relative group overflow-hidden rounded-xl p-[1px] focus:outline-none">
+                    <span class="absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-xl transition-all group-hover:opacity-90"></span>
+                    <span class="relative px-5 py-2.5 rounded-[11px] bg-slate-900 text-white text-sm font-semibold flex items-center space-x-2 transition-all group-hover:bg-opacity-80">
+                        <span>Book Discovery Call</span>
+                        <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+                    </span>
+                </a>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button id="menu-btn" class="md:hidden text-slate-300 hover:text-white focus:outline-none text-2xl">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden glass-card border-t border-slate-800 px-6 py-6 space-y-4">
+            <a href="#services" class="block text-slate-300 hover:text-cyan-400 font-medium py-1 mobile-link">Services</a>
+            <a href="#work" class="block text-slate-300 hover:text-cyan-400 font-medium py-1 mobile-link">Case Studies</a>
+            <a href="#stack" class="block text-slate-300 hover:text-cyan-400 font-medium py-1 mobile-link">Tech Stack</a>
+            <a href="#results" class="block text-slate-300 hover:text-cyan-400 font-medium py-1 mobile-link">Results</a>
+            <a href="#contact" class="block text-slate-300 hover:text-cyan-400 font-medium py-1 mobile-link">Contact</a>
+            <div class="pt-2">
+                <a href="#contact" class="block w-full text-center py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-semibold text-sm shadow-lg shadow-cyan-500/20 mobile-link">
+                    Book Discovery Call
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-24 md:pt-44 md:pb-36 overflow-hidden">
+        <!-- Background Ambient Glows -->
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-[140px] pointer-events-none"></div>
+        <div class="absolute top-1/3 right-10 w-[400px] h-[400px] bg-purple-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="max-w-3xl mx-auto text-center space-y-8">
+                <!-- Badge -->
+                <div class="inline-flex items-center space-x-2 px-4 py-2 rounded-full glass-card border border-cyan-500/30 text-cyan-400 text-xs font-semibold tracking-wide uppercase animate-float">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                    <span>AI Automation & n8n Architect</span>
+                </div>
+
+                <!-- Headline -->
+                <h1 class="font-heading font-extrabold text-4xl sm:text-6xl lg:text-7xl tracking-tight text-white leading-tight">
+                    Supercharge Your Business with <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500">Custom AI & n8n Automation</span>
+                </h1>
+
+                <!-- Subheadline -->
+                <p class="text-base sm:text-lg text-slate-300 font-normal max-w-2xl mx-auto leading-relaxed">
+                    Eliminate repetitive operational drag. I build resilient, multi-step n8n workflows integrated with advanced LLMs, vector search, and core CRM architectures to scale your output effortlessly.
+                </p>
+
+                <!-- CTA Buttons -->
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+                    <a href="#contact" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-semibold text-base shadow-xl shadow-cyan-500/25 hover:opacity-95 hover:scale-[1.02] transition-all flex items-center justify-center space-x-3">
+                        <span>Book a Discovery Call</span>
+                        <i class="fa-solid fa-arrow-right text-sm"></i>
+                    </a>
+                    <a href="#work" class="w-full sm:w-auto px-8 py-4 rounded-xl glass-card border border-slate-700 text-slate-200 font-semibold text-base hover:bg-slate-800/80 hover:text-white transition-all flex items-center justify-center space-x-2">
+                        <span>View Work</span>
+                        <i class="fa-solid fa-code text-xs text-cyan-400"></i>
+                    </a>
+                </div>
+
+                <!-- Trust Metric Badges -->
+                <div class="pt-12 grid grid-cols-2 md:grid-cols-3 gap-6 max-w-2xl mx-auto border-t border-slate-800/80 mt-12">
+                    <div class="text-center">
+                        <div class="font-heading font-extrabold text-2xl sm:text-3xl text-white">40+ Hrs</div>
+                        <div class="text-xs text-slate-400 mt-1">Saved Per Week / Client</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="font-heading font-extrabold text-2xl sm:text-3xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">99.9%</div>
+                        <div class="text-xs text-slate-400 mt-1">Workflow Reliability</div>
+                    </div>
+                    <div class="col-span-2 md:col-span-1 text-center">
+                        <div class="font-heading font-extrabold text-2xl sm:text-3xl text-purple-400">10x</div>
+                        <div class="text-xs text-slate-400 mt-1">Lead Response Speed</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Expertise & Services Section -->
+    <section id="services" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-2xl mx-auto mb-16 space-y-4">
+                <h2 class="text-cyan-400 text-sm font-semibold tracking-wider uppercase">Core Expertise</h2>
+                <h3 class="font-heading font-bold text-3xl sm:text-4xl text-white">Architected for Scale & Precision</h3>
+                <p class="text-slate-400 text-base">From complex asynchronous webhook orchestrations to fully autonomous AI agents, I design production-grade backend pipelines.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Service 1 -->
+                <div class="glass-card rounded-2xl p-8 hover:border-cyan-500/50 transition-all duration-300 group glow-effect">
+                    <div class="w-14 h-14 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 text-2xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-diagram-project"></i>
+                    </div>
+                    <h4 class="font-heading font-bold text-xl text-white mb-3">Custom n8n Workflows</h4>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                        Engineered multi-step webhooks, robust error handling channels, asynchronous queues, and complex API integrations tailored specifically to your data infrastructure.
+                    </p>
+                    <ul class="space-y-2 text-xs text-slate-300">
+                        <li class="flex items-center space-x-2"><i class="fa-solid fa-check text-cyan-400"></i><span>Advanced Error Handlers & Retries</span></li>
+                        <li class="flex items-center space-x-2"><i class="fa-solid fa-check text-cyan-400"></i><span>REST & GraphQL API Orchestration</span></li>
+                        <li class="flex items-center space-x-2"><i class="fa-solid fa-check text-cyan-400"></i><span>Self-hosted or Cloud n8n Setup</span></li>
+                    </ul>
+                </div>
+
+                <!-- Service 2 -->
+                <div class="glass-card rounded-2xl p-8 hover:border-purple-500/50 transition-all duration-300 group glow-purple">
+                    <div class="w-14 h-14 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 text-2xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <h4 class="font-heading font-bold text-xl text-white mb-3">AI Agents & LLM Integration</h4>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                        Harness the power of OpenAI, Claude, and specialized vector databases. Deploy autonomous RAG systems that reason over your proprietary documentation.
+                    </p>
+                    <ul class="space-y-2 text-xs text-slate-300">
+                        <li class="flex items-center space-x-2"><i class="fa-solid fa-check text-purple-400"></i><span>Custom RAG & Vector Database Embeddings</span></li>
+                        <li class="flex items-center space-x-2"><i class="fa-solid fa-check text-purple-400"></i><span>Autonomous Multi-Agent Task Handlers</span></li>
+                        <li class="flex items-center space-x-2"><i class="fa-solid fa-check text-purple-400"></i><span>Function Calling & Structured Outputs</span></li>
+                    </ul>
+                </div>
+
+                <!-- Service 3 -->
+                <div class="glass-card rounded-2xl p-8 hover:border-blue-500/50 transition-all duration-300 group">
+                    <div class="w-14 h-14 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 text-2xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-gears"></i>
+                    </div>
+                    <h4 class="font-heading font-bold text-xl text-white mb-3">Business Process Automation</h4>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                        Streamline customer onboarding, bi-directional CRM synchronizations, automated lead routing, and dynamic executive report generation.
+                    </p>
+                    <ul class="space-y-2 text-xs text-slate-300">
+                        <li class="flex items-center space-x-2"><i class="fa-solid fa-check text-blue-400"></i><span>Real-time CRM Enrichment & Syncing</span></li>
+                        <li class="flex items-center space-x-2"><i class="fa-solid fa-check text-blue-400"></i><span>Instant Lead Qualification Pipelines</span></li>
+                        <li class="flex items-center space-x-2"><i class="fa-solid fa-check text-blue-400"></i><span>Automated Slack/Teams Alerting</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Work / Case Studies Section -->
+    <section id="work" class="py-24 bg-slate-900/40 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-2xl mx-auto mb-16 space-y-4">
+                <h2 class="text-cyan-400 text-sm font-semibold tracking-wider uppercase">Proven Impact</h2>
+                <h3 class="font-heading font-bold text-3xl sm:text-4xl text-white">Featured Case Studies</h3>
+                <p class="text-slate-400 text-base">Real-world transformations delivered through advanced n8n workflows and AI systems.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Case Study 1 -->
+                <div class="glass-card rounded-2xl overflow-hidden flex flex-col justify-between hover:border-cyan-500/40 transition-all duration-300">
+                    <div class="p-8 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 text-xs font-semibold">Client Onboarding</span>
+                            <span class="text-xs text-slate-400">Saved 40+ hrs/wk</span>
+                        </div>
+                        <h4 class="font-heading font-bold text-xl text-white">Automated Client Onboarding & Provisioning</h4>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            Built an end-to-end n8n workflow triggered upon Stripe payment. Instantly provisions user accounts, sets up workspace folders in Google Drive, schedules kickoff emails via Gmail, and updates HubSpot CRM.
+                        </p>
+                    </div>
+                    <div class="px-8 py-4 bg-slate-900/60 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-300">
+                        <span class="font-medium text-cyan-400"><i class="fa-solid fa-bolt mr-1"></i> 12-Step n8n Pipeline</span>
+                        <span class="text-slate-400">Stripe • HubSpot • Google API</span>
+                    </div>
+                </div>
+
+                <!-- Case Study 2 -->
+                <div class="glass-card rounded-2xl overflow-hidden flex flex-col justify-between hover:border-purple-500/40 transition-all duration-300">
+                    <div class="p-8 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 text-xs font-semibold">AI Lead Qualification</span>
+                            <span class="text-xs text-slate-400">300% Conversion Lift</span>
+                        </div>
+                        <h4 class="font-heading font-bold text-xl text-white">AI-Powered Lead Enrichment & Routing</h4>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            Integrated OpenAI GPT-4o with n8n to analyze inbound contact forms, scrape company domains, score lead readiness using RAG context, and instantly route high-value prospects to VIP Slack channels.
+                        </p>
+                    </div>
+                    <div class="px-8 py-4 bg-slate-900/60 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-300">
+                        <span class="font-medium text-purple-400"><i class="fa-solid fa-brain mr-1"></i> GPT-4o + Vector DB</span>
+                        <span class="text-slate-400">OpenAI • Airtable • Slack</span>
+                    </div>
+                </div>
+
+                <!-- Case Study 3 -->
+                <div class="glass-card rounded-2xl overflow-hidden flex flex-col justify-between hover:border-blue-500/40 transition-all duration-300">
+                    <div class="p-8 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 text-xs font-semibold">Financial Reporting</span>
+                            <span class="text-xs text-slate-400">100% Error-Free</span>
+                        </div>
+                        <h4 class="font-heading font-bold text-xl text-white">Automated Cross-Platform Financial Sync</h4>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            Engineered scheduled cron jobs in n8n pulling daily revenue and expense metrics from QuickBooks and Stripe, normalizing datasets with Python scripts, and generating interactive executive summaries.
+                        </p>
+                    </div>
+                    <div class="px-8 py-4 bg-slate-900/60 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-300">
+                        <span class="font-medium text-blue-400"><i class="fa-solid fa-code mr-1"></i> Python + Cron n8n</span>
+                        <span class="text-slate-400">QuickBooks • PostgreSQL • Notion</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Stack / Skills Grid -->
+    <section id="stack" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-2xl mx-auto mb-16 space-y-4">
+                <h2 class="text-cyan-400 text-sm font-semibold tracking-wider uppercase">Toolset & Technologies</h2>
+                <h3 class="font-heading font-bold text-3xl sm:text-4xl text-white">Built with Industry Standards</h3>
+                <p class="text-slate-400 text-base">Utilizing high-performance automation frameworks, robust databases, and modern programming languages.</p>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
+                <!-- Tech Badge 1 -->
+                <div class="glass-card rounded-2xl p-6 text-center hover:border-cyan-500/50 hover:bg-slate-800/50 transition-all group">
+                    <div class="w-12 h-12 mx-auto rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 text-xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <div class="font-heading font-bold text-white text-sm">n8n</div>
+                    <div class="text-xs text-slate-400 mt-1">Core Automation</div>
+                </div>
+
+                <!-- Tech Badge 2 -->
+                <div class="glass-card rounded-2xl p-6 text-center hover:border-purple-500/50 hover:bg-slate-800/50 transition-all group">
+                    <div class="w-12 h-12 mx-auto rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400 text-xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <div class="font-heading font-bold text-white text-sm">OpenAI & Claude</div>
+                    <div class="text-xs text-slate-400 mt-1">LLM Integration</div>
+                </div>
+
+                <!-- Tech Badge 3 -->
+                <div class="glass-card rounded-2xl p-6 text-center hover:border-blue-500/50 hover:bg-slate-800/50 transition-all group">
+                    <div class="w-12 h-12 mx-auto rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 text-xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-brands fa-python"></i>
+                    </div>
+                    <div class="font-heading font-bold text-white text-sm">Python</div>
+                    <div class="text-xs text-slate-400 mt-1">Data Manipulation</div>
+                </div>
+
+                <!-- Tech Badge 4 -->
+                <div class="glass-card rounded-2xl p-6 text-center hover:border-cyan-500/50 hover:bg-slate-800/50 transition-all group">
+                    <div class="w-12 h-12 mx-auto rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 text-xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-webhook"></i>
+                    </div>
+                    <div class="font-heading font-bold text-white text-sm">Webhooks</div>
+                    <div class="text-xs text-slate-400 mt-1">Real-time Triggers</div>
+                </div>
+
+                <!-- Tech Badge 5 -->
+                <div class="glass-card rounded-2xl p-6 text-center hover:border-purple-500/50 hover:bg-slate-800/50 transition-all group">
+                    <div class="w-12 h-12 mx-auto rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400 text-xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-table"></i>
+                    </div>
+                    <div class="font-heading font-bold text-white text-sm">Airtable</div>
+                    <div class="text-xs text-slate-400 mt-1">No-code DB</div>
+                </div>
+
+                <!-- Tech Badge 6 -->
+                <div class="glass-card rounded-2xl p-6 text-center hover:border-blue-500/50 hover:bg-slate-800/50 transition-all group">
+                    <div class="w-12 h-12 mx-auto rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 text-xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div class="font-heading font-bold text-white text-sm">Make / Zapier</div>
+                    <div class="text-xs text-slate-400 mt-1">Alternative Tools</div>
+                </div>
+
+                <!-- Tech Badge 7 -->
+                <div class="glass-card rounded-2xl p-6 text-center hover:border-cyan-500/50 hover:bg-slate-800/50 transition-all group">
+                    <div class="w-12 h-12 mx-auto rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 text-xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-database"></i>
+                    </div>
+                    <div class="font-heading font-bold text-white text-sm">PostgreSQL</div>
+                    <div class="text-xs text-slate-400 mt-1">Relational DB</div>
+                </div>
+
+                <!-- Tech Badge 8 -->
+                <div class="glass-card rounded-2xl p-6 text-center hover:border-purple-500/50 hover:bg-slate-800/50 transition-all group">
+                    <div class="w-12 h-12 mx-auto rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400 text-xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-network-wired"></i>
+                    </div>
+                    <div class="font-heading font-bold text-white text-sm">REST APIs</div>
+                    <div class="text-xs text-slate-400 mt-1">System Integration</div>
+                </div>
+
+                <!-- Tech Badge 9 -->
+                <div class="glass-card rounded-2xl p-6 text-center hover:border-blue-500/50 hover:bg-slate-800/50 transition-all group">
+                    <div class="w-12 h-12 mx-auto rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 text-xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-cube"></i>
+                    </div>
+                    <div class="font-heading font-bold text-white text-sm">LangChain</div>
+                    <div class="text-xs text-slate-400 mt-1">AI Orchestration</div>
+                </div>
+
+                <!-- Tech Badge 10 -->
+                <div class="glass-card rounded-2xl p-6 text-center hover:border-cyan-500/50 hover:bg-slate-800/50 transition-all group">
+                    <div class="w-12 h-12 mx-auto rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 text-xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-cloud"></i>
+                    </div>
+                    <div class="font-heading font-bold text-white text-sm">Docker / VPS</div>
+                    <div class="text-xs text-slate-400 mt-1">Self-Hosting</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Client Testimonials / Results Section -->
+    <section id="results" class="py-24 bg-slate-900/40 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-2xl mx-auto mb-16 space-y-4">
+                <h2 class="text-cyan-400 text-sm font-semibold tracking-wider uppercase">Testimonials</h2>
+                <h3 class="font-heading font-bold text-3xl sm:text-4xl text-white">Trusted by Founders & Leaders</h3>
+                <p class="text-slate-400 text-base">Hear how custom automation restructured their daily operations.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="glass-card rounded-2xl p-8 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="flex text-amber-400 text-sm space-x-1">
+                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="text-slate-300 text-sm italic leading-relaxed">
+                            "NexusFlow automated our entire client intake and CRM pipeline using n8n. What used to take our team 15 hours a week now happens instantly in the background with zero errors."
+                        </p>
+                    </div>
+                    <div class="pt-6 mt-6 border-t border-slate-800 flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm">
+                            JD
+                        </div>
+                        <div>
+                            <div class="font-heading font-bold text-sm text-white">Jonathan Davis</div>
+                            <div class="text-xs text-slate-400">CEO, ScaleGrowth Agency</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="glass-card rounded-2xl p-8 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="flex text-amber-400 text-sm space-x-1">
+                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="text-slate-300 text-sm italic leading-relaxed">
+                            "The AI agent setup and RAG pipeline built for our knowledge base completely transformed customer support response times. Absolute masterclass in n8n workflow architecture."
+                        </p>
+                    </div>
+                    <div class="pt-6 mt-6 border-t border-slate-800 flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-purple-500 to-pink-600 flex items-center justify-center text-white font-bold text-sm">
+                            SR
+                        </div>
+                        <div>
+                            <div class="font-heading font-bold text-sm text-white">Sarah R.</div>
+            
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div class="glass-card rounded-2xl p-8 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="flex text-amber-400 text-sm space-x-1">
+                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="text-slate-300 text-sm italic leading-relaxed">
+                            "Finding an expert who truly understands complex error handling, rate limits, and custom Python nodes in n8n is rare. NexusFlow delivered our project ahead of schedule."
+                        </p>
+                    </div>
+                    <div class="pt-6 mt-6 border-t border-slate-800 flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-cyan-400 to-purple-500 flex items-center justify-center text-white font-bold text-sm">
+                            MK
+                        </div>
+                        <div>
+                            <div class="font-heading font-bold text-sm text-white">Marcus K.</div>
+                          
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 relative">
+        <div class="absolute bottom-0 right-10 w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[150px] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <!-- Left Column: Info & Calendar Booking -->
+                <div class="space-y-6">
+                    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 text-xs font-semibold tracking-wide uppercase">
+                        <span>Get In Touch</span>
+                    </div>
+                    <h2 class="font-heading font-extrabold text-3xl sm:text-5xl text-white tracking-tight leading-tight">
+                        Ready to Automate Your Workflow?
+                    </h2>
+                    <p class="text-slate-300 text-base leading-relaxed">
+                        Let's discuss your current bottlenecks and map out a custom n8n & AI automation architecture to reclaim your time and scale operations.
+                    </p>
+
+                    <div class="space-y-4 pt-4">
+                        <div class="flex items-center space-x-4 text-slate-300">
+                            <div class="w-12 h-12 rounded-xl glass-card flex items-center justify-center text-cyan-400 text-lg">
+                                <i class="fa-solid fa-calendar-check"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-heading font-bold text-white text-sm">Direct Discovery Call</h4>
+                                <p class="text-xs text-slate-400">30-min architecture consultation</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4 text-slate-300">
+                            <div class="w-12 h-12 rounded-xl glass-card flex items-center justify-center text-purple-400 text-lg">
+                                <i class="fa-solid fa-bolt"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-heading font-bold text-white text-sm">Rapid Turnaround</h4>
+                                <p class="text-xs text-slate-400">Production-ready workflows in days, not months</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-4">
+                        <a href="tel:+12019379699" target="_blank" class="inline-flex items-center space-x-3 px-8 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-semibold text-sm shadow-xl shadow-cyan-500/20 hover:opacity-95 transition-all">
+                            <i class="fa-regular fa-calendar-days text-base"></i>
+                            <span>Schedule Direct Booking Call</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right Column: Lead Capture Form -->
+                <div class="glass-card rounded-3xl p-8 sm:p-10 border border-slate-700/60 shadow-2xl">
+                    <h3 class="font-heading font-bold text-2xl text-white mb-2">Send a Message</h3>
+                    <p class="text-slate-400 text-xs mb-6">Fill out the form below and I will respond within 24 hours.</p>
+
+                    <form id="contact-form" class="space-y-5" action="https://formsubmit.co/khiljiasad2@gmail.com" method="post">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2" for="name">Your Name</label>
+                            <input type="text" id="name" required placeholder="John Doe" class="w-full bg-slate-900/80 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-cyan-400 transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2" for="email">Work Email</label>
+                            <input type="email" id="email" required placeholder="john@company.com" class="w-full bg-slate-900/80 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-cyan-400 transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2" for="details">Project Details & Bottlenecks</label>
+                            <textarea id="details" rows="4" required placeholder="Tell me about your current tools (Stripe, HubSpot, etc.) and what you'd like to automate..." class="w-full bg-slate-900/80 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-cyan-400 transition-colors resize-none"></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-semibold text-sm shadow-lg shadow-cyan-500/20 hover:opacity-95 transition-all flex items-center justify-center space-x-2">
+                            <span>Submit Project Inquiry</span>
+                            <i class="fa-solid fa-paper-plane text-xs"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 bg-slate-950 py-12">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-500 to-purple-600 flex items-center justify-center text-white">
+                    <i class="fa-solid fa-network-wired text-xs"></i>
+                </div>
+                <span class="font-heading font-bold text-white tracking-tight">AsadKhilji</span>
+                <span class="text-xs text-slate-500 ml-2">© 2026 Asad Khilji. All rights reserved.</span>
+            </div>
+
+            <div class="flex items-center space-x-6 text-slate-400 text-sm">
+                <a href="#services" class="hover:text-cyan-400 transition-colors">Services</a>
+                <a href="#work" class="hover:text-cyan-400 transition-colors">Case Studies</a>
+                <a href="#stack" class="hover:text-cyan-400 transition-colors">Tech Stack</a>
+                <a href="#contact" class="hover:text-cyan-400 transition-colors">Contact</a>
+            </div>
+
+            <div class="flex items-center space-x-4 text-slate-400 text-lg">
+                <a href="https://github.com/asad-khilji" class="hover:text-cyan-400 transition-colors"><i class="fa-brands fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/mohammad-asad-khilji/" class="hover:text-cyan-400 transition-colors"><i class="fa-brands fa-linkedin"></i></a>
+              
+            </div>
+        </div>
+    </footer>
+
+    <!-- Vanilla JavaScript for Interactivity -->
+    <script>
+        // Mobile Menu Toggle
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Form Submission Handler with Toast Feedback
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const details = document.getElementById('details').value;
+
+            if (!name || !email || !details) return;
+
+            // Show Toast Notification
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-title').innerText = "Inquiry Sent!";
+            document.getElementById('toast-desc').innerText = "Thanks! I'll get back to you within 24 hours.";
+            
+            toast.classList.remove('translate-y-32', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            // Reset Form
+            document.getElementById('contact-form').reset();
+
+            // Hide Toast after 4 seconds
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-32', 'opacity-0');
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
